@@ -15,10 +15,8 @@
 
     <script type="text/babel">
     var Navbar = React.createClass({
-      getDefaultProps(){
-        return{
-          brand: 'React Strap'
-        }
+      change(page) {
+        this.props.change(page);
       },
       render(){
         return(
@@ -29,9 +27,9 @@
               </div>
               <div id="navbar">
                 <ul className="nav navbar-nav">
-                  <li className={(this.props.currentPage === 'home') ? 'active': ''}> <a href="#" > Home </a></li>
-                  <li className={(this.props.currentPage === 'about') ? 'active': ''}> <a href="#"> About </a></li>
-                  <li className={(this.props.currentPage === 'contact') ? 'active': ''}> <a href="#"> Contact </a></li>
+                  <li className={(this.props.currentPage === 'home') ? 'active': ''}> <a onClick={this.change.bind(this, 'home')} href="#" > Home </a></li>
+                  <li className={(this.props.currentPage === 'about') ? 'active': ''}> <a onClick={this.change.bind(this, 'about')} href="#"> About </a></li>
+                  <li className={(this.props.currentPage === 'contact') ? 'active': ''}> <a onClick={this.change.bind(this, 'contact')} href="#"> Contact </a></li>
                 </ul>
               </div>
 
@@ -83,11 +81,19 @@
     });
 
     var Theme = React.createClass({
+
+      handleChange(page) {
+        this.setState({
+          currentPage: page
+        });
+      },
+
       getInitialState() {
         return {
-          currentPage: 'about'
+          currentPage: 'contact'
         };
       },
+
       getDefaultProps() {
         return {
           brand: 'React Strap',
@@ -95,11 +101,18 @@
           text: 'This is a Bootstrap Theme that uses React.js components',
         }
       },
+
       render(){
+        var jumbotron;
+        if(this.state.currentPage == 'home') {
+          jumbotron = <JumboTron heading={this.props.heading} text={this.props.text}/>
+        } else {
+          jumbotron = '';
+        }
         return(
           <div>
-            <Navbar currentPage={this.state.currentPage} brand={this.props.brand}/>
-            <JumboTron heading={this.props.heading} text={this.props.text}/>
+            <Navbar currentPage={this.state.currentPage} brand={this.props.brand} change={this.handleChange}/>
+            {jumbotron}
             <Page currentPage={this.state.currentPage}/>
           </div>
         );
